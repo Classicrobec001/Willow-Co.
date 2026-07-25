@@ -1,12 +1,29 @@
 # Booking Template
 
-A reusable appointment-booking website: landing page, service catalog, a
-multi-step booking wizard with real-time availability, a booking
-confirmation page, and a lightweight password-protected admin dashboard.
+A reusable appointment-booking website with a full marketing front end:
+a conversion-focused home page, dedicated **Services**, **About**,
+**Gallery**, and **Contact** pages, a multi-step booking wizard with
+real-time availability, a booking confirmation page, and a lightweight
+password-protected admin dashboard.
 
 The whole point of this project is that it reskins for a new client by
-editing **one config file** — no component or page code changes required.
-See [BRANDING.md](./BRANDING.md) for the full walkthrough.
+editing config files — no component or page code changes required. Brand
+identity (colors, services, hours, contact) lives in **one file**; the
+marketing copy and stock imagery live in two more. See
+[BRANDING.md](./BRANDING.md) for the full walkthrough.
+
+## Pages
+
+| Route | What it is |
+|-------|------------|
+| `/` | Home — hero, stats, featured services, "why book with us", studio story, gallery preview, testimonials, team, and FAQ |
+| `/services` | Full service catalog (from the DB) with clear pricing and per-service booking |
+| `/about` | Brand story, values, stats, and the team |
+| `/gallery` | Photo grid of the studio and work |
+| `/contact` | Contact details, opening hours, a live map embed, and a contact form |
+| `/book` | Multi-step booking wizard with real-time availability |
+| `/booking/[id]` | Booking confirmation |
+| `/admin` | Password-protected bookings dashboard |
 
 ## Stack
 
@@ -44,17 +61,27 @@ src/
       willow-hair-studio.ts # example brand #1 (active by default)
       apex-consulting.ts    # example brand #2 (proves the reskin — different vertical entirely)
       _template.ts          # blank starter, copy this for a new client
+    content.ts              # marketing copy: stats, features, testimonials, team, FAQs, values
+    stock.ts                # stock image map (Unsplash IDs) + img() URL helper
   lib/
     db.ts                   # SQLite access layer (services, bookings)
     availability.ts         # computes bookable time slots from hours + existing bookings
     timezone.ts             # timezone-aware date/time helpers (Intl-based, no dependency)
+    hours.ts                 # formats brand.businessHours into weekly display rows
     format.ts                # money/duration formatting
     validation.ts           # zod schema for booking submissions
     adminAuth.ts             # simple signed-cookie password gate for /admin
   components/
-    Header.tsx, Footer.tsx, ServiceCard.tsx, BookingWizard.tsx, AdminLogoutButton.tsx
+    Header.tsx, Footer.tsx          # site chrome (Header has nav + mobile menu)
+    SectionHeading.tsx, FeatureCard.tsx, TestimonialCard.tsx, TeamCard.tsx,
+    FaqList.tsx, CTASection.tsx     # reusable marketing sections
+    ServiceCard.tsx, BookingWizard.tsx, ContactForm.tsx, AdminLogoutButton.tsx
   app/
-    page.tsx                # landing page (hero + service list)
+    page.tsx                # home page (marketing sections)
+    services/page.tsx        # service catalog + pricing
+    about/page.tsx           # story, values, team
+    gallery/page.tsx         # photo grid
+    contact/page.tsx         # contact info, hours, map, form
     book/page.tsx            # booking flow (wraps BookingWizard)
     booking/[id]/page.tsx    # confirmation page
     admin/page.tsx, admin/login/page.tsx
@@ -77,6 +104,23 @@ those values as CSS variables (`--brand-primary`, etc.) on every request.
 `@theme inline`, so every component just uses ordinary utility classes —
 `bg-primary`, `text-secondary`, `border-border` — and never hardcodes a hex
 value. Change the brand config, the whole UI re-colors itself.
+
+## Marketing content & imagery
+
+The marketing pages read all of their copy and photos from two config files,
+so a new client's site is a data edit, not a code edit:
+
+- **`src/config/content.ts`** — stats, feature blurbs, testimonials, team
+  members, FAQs, and values. Plain typed arrays; edit the text or add/remove
+  entries and the pages update automatically.
+- **`src/config/stock.ts`** — a map of the stock photos used across the site.
+  Photos are served from Unsplash's CDN; each entry is just the `photo-…` ID
+  from an Unsplash image URL. The `img(id, w, h?)` helper builds a correctly
+  sized, auto-formatted URL. Swap the IDs to reskin the imagery.
+
+The contact form (`src/components/ContactForm.tsx`) needs no backend: it
+composes a pre-filled email via a `mailto:` link the visitor sends from their
+own mail client. Swap that for a `POST` to your API or CRM when you have one.
 
 ## Booking logic
 
