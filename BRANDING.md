@@ -15,8 +15,7 @@ cp src/config/brands/_template.ts src/config/brands/<client-slug>.ts
 `src/config/brands/_template.ts` has every field pre-filled with a
 placeholder and an inline comment explaining it. For a fuller real-world
 example to reference, look at `src/config/brands/willow-hair-studio.ts`
-(a hair salon) or `src/config/brands/apex-consulting.ts` (a consulting
-practice) — same file shape, completely different look and vertical.
+(a hair salon) — same file shape, ready to copy and re-fill for any vertical.
 
 Fill in, at minimum:
 
@@ -103,9 +102,7 @@ checker") and aim for at least 4.5:1.
 
 ## Proving it works before you commit
 
-The fastest gut-check that a new brand file is wired correctly: temporarily
-point `src/config/brand.ts` at `src/config/brands/apex-consulting.ts`,
-run `npm run dev`, and confirm the whole site changes — different name,
-colors, services, hours — with the exact same code. If that works, your new
-brand file will too. Point the import back at your new client's file when
-you're done checking.
+The fastest gut-check that a new brand file is wired correctly: point
+`src/config/brand.ts` at your new file, run `npm run dev`, and confirm the
+whole site changes — name, colors, services, hours — with the exact same
+code. If the site renders with your brand's details, the wiring is correct.

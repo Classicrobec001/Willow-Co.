@@ -58,8 +58,7 @@ src/
     brand.types.ts          # the BrandConfig contract every brand file follows
     brand.ts                # <-- the ONE file you edit per client (re-exports the active brand)
     brands/
-      willow-hair-studio.ts # example brand #1 (active by default)
-      apex-consulting.ts    # example brand #2 (proves the reskin — different vertical entirely)
+      willow-hair-studio.ts # example brand (active by default)
       _template.ts          # blank starter, copy this for a new client
     content.ts              # marketing copy: stats, features, testimonials, team, FAQs, values
     stock.ts                # stock image map (Unsplash IDs) + img() URL helper
